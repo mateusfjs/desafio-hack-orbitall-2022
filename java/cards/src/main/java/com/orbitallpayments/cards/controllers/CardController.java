@@ -4,6 +4,10 @@ package com.orbitallpayments.cards.controllers;
 import com.orbitallpayments.cards.domains.Card;
 import com.orbitallpayments.cards.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/card")
+@RequestMapping("/cards")
 public class CardController {
 
     @Autowired
@@ -41,6 +45,16 @@ public class CardController {
            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
          }
+
+
+    @GetMapping("/paginationAndSorting")
+    public ResponseEntity<Page<Card>> findAllPagination(@PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.ASC)Pageable page){
+        Page<Card> cards = cardService.findAllPage(page);
+
+        return new ResponseEntity(cards, HttpStatus.OK);
+    }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Card> updateById(@PathVariable(value = "id")long id, @RequestBody Card card){

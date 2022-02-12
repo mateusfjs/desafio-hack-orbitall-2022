@@ -3,6 +3,8 @@ package com.orbitallpayments.cards.services;
 import com.orbitallpayments.cards.domains.Card;
 import com.orbitallpayments.cards.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,10 @@ public class CardService {
         }else{
             throw new Exception();
         }
+    }
+
+    public Page<Card> findAllPage(Pageable page) {
+        return (Page<Card>) cardRepository.findAll(page);
     }
 
     public Card updateById(Long id, Card cardUpdate) throws Exception {
