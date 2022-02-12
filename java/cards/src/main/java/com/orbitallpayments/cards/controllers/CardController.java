@@ -34,9 +34,32 @@ public class CardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> findById(@PathVariable Long id){
-        Optional<Card> fetchedCard = cardService.findById(id);
-        return ResponseEntity.ok(fetchedCard.get());
+       try {
+           Optional<Card> fetchedCard = cardService.findById(id);
+           return new ResponseEntity<>(fetchedCard.get(), HttpStatus.OK);
+       }catch (Exception e){
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
+         }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Card> updateById(@PathVariable(value = "id")long id, @RequestBody Card card){
+     try {
+         Card cardUp = this.cardService.updateById(id, card);
+         return new ResponseEntity<>(cardUp, HttpStatus.OK);
+     }catch (Exception e){
+         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+     }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Card> deleteById(@PathVariable(value = "id")long id){
+        try {
+            this.cardService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

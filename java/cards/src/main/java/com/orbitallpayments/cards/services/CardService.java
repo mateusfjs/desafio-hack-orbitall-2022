@@ -22,7 +22,48 @@ public class CardService {
         return (List<Card>) cardRepository.findAll();
     }
 
-    public Optional<Card> findById(Long id){
-        return cardRepository.findById(id);
+    public Optional<Card> findById(Long id) throws Exception{
+        if(this.isExist(id)) {
+            return cardRepository.findById(id);
+        }else{
+            throw new Exception();
+        }
+    }
+
+    public Card updateById(Long id, Card cardUpdate) throws Exception {
+        if(this.isExist(cardUpdate.getId())){
+            var card = this.cardRepository.findById(id).get();
+
+            card.setCardNumber(cardUpdate.getCardNumber());
+            card.setAddress(cardUpdate.getAddress());
+            card.setCity(cardUpdate.getCity());
+            card.setEmbossName(cardUpdate.getEmbossName());
+            card.setDocumentNumber(cardUpdate.getDocumentNumber());
+            card.setMotherName(cardUpdate.getMotherName());
+            card.setCustomerName(cardUpdate.getCustomerName());
+
+            return cardRepository.save(card);
+        }else{
+            throw new Exception();
+        }
+
+
+    }
+
+    public void deleteById(long id) throws Exception{
+        if(this.isExist(id)){
+            this.cardRepository.deleteById(id);
+        }else{
+            throw new Exception();
+        }
+    }
+
+    //Verifica se existe um objeto do tio Card no bd
+    public boolean isExist(long id){
+        if(!this.cardRepository.findById(id).isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
